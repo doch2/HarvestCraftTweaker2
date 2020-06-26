@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "tfar.harvestcrafttweaker.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "TileEntityGroundTrapMixin",
+    "TileEntityWaterTrapMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
