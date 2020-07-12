@@ -30,7 +30,7 @@ public abstract class TileEntityGroundTrapMixin {
 	 * @reason bad code, hardcoded to specific items, rerouted to check recipe system for outputs
 	 */
 	@Overwrite(remap = false)
-	private boolean canRun(){
+	private boolean canRun() {
 		ItemStack stack = itemstackhandler.getStackInSlot(18);
 		return !stack.isEmpty() && GroundTrapRecipes.isValidInput(stack);
 	}

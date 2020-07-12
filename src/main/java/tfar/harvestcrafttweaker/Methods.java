@@ -6,10 +6,13 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -18,9 +21,19 @@ public class Methods {
 
 	//note: these recipes will initially load when being accessed by these methods
 
+	public static final List<ItemStack> marketOutputsToRemove = new ArrayList<>();
+	public static final List<MarketData> marketToAdd = new ArrayList<>();
+
+	public static boolean clearmarket = false;
+
 	@ZenMethod
 	public static void clearAllPressing(){
 		ReflectionHacks.clearAllPressingRecipes();
+	}
+
+	@ZenMethod
+	public static void clearAllMarket() {
+		clearmarket = true;
 	}
 
 	@ZenMethod
@@ -98,12 +111,12 @@ public class Methods {
 	@ZenMethod
 	public static void addMarket(IItemStack toBuy,IItemStack input,int cost) {
 		MarketData marketData = new MarketData(CraftTweakerMC.getItemStack(toBuy),CraftTweakerMC.getItemStack(input),cost);
-		ReflectionHacks.addMarketTrade(marketData);
+		Methods.marketToAdd.add(marketData);
 	}
 
 	@ZenMethod
 	public static void removeMarketByOutput(IItemStack output) {
-		ReflectionHacks.removeMarketTrade(CraftTweakerMC.getItemStack(output));
+		Methods.marketOutputsToRemove.add(CraftTweakerMC.getItemStack(output));
 	}
 
 	//shipping bin

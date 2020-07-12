@@ -37,6 +37,7 @@ public class ReflectionHacks {
 
 	//shipping bin
 	public static final Field shippingList;
+
 	static {
 		try {
 			registerPressingRecipe = PresserRecipes.class.getDeclaredMethod("makeItemStackRecipe", ItemStack.class, ItemStack.class, ItemStack.class);
@@ -68,9 +69,9 @@ public class ReflectionHacks {
 		}
 	}
 
-	public static void makePressingRecipe(ItemStack input, ItemStack leftOutput,ItemStack rightOutput) {
+	public static void makePressingRecipe(ItemStack input, ItemStack leftOutput, ItemStack rightOutput) {
 		try {
-			registerPressingRecipe.invoke(null,input,leftOutput,rightOutput);
+			registerPressingRecipe.invoke(null, input, leftOutput, rightOutput);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
@@ -79,7 +80,7 @@ public class ReflectionHacks {
 
 	public static void removePressingRecipeByInput(ItemStack input) {
 		try {
-			Map<ItemStack,ItemStack[]> map = (Map<ItemStack, ItemStack[]>) pressingList.get(null);
+			Map<ItemStack, ItemStack[]> map = (Map<ItemStack, ItemStack[]>) pressingList.get(null);
 			for (Iterator<Map.Entry<ItemStack, ItemStack[]>> iterator = map.entrySet().iterator(); iterator.hasNext(); ) {
 				Map.Entry<ItemStack, ItemStack[]> entry = iterator.next();
 				ItemStack stack = entry.getKey();
@@ -93,7 +94,7 @@ public class ReflectionHacks {
 
 	public static void clearAllPressingRecipes() {
 		try {
-			Map<ItemStack,ItemStack[]> map = (Map<ItemStack, ItemStack[]>) pressingList.get(null);
+			Map<ItemStack, ItemStack[]> map = (Map<ItemStack, ItemStack[]>) pressingList.get(null);
 			map.clear();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -104,7 +105,7 @@ public class ReflectionHacks {
 
 	public static void makeGrindingRecipe(ItemStack input, ItemStack leftOutput, ItemStack rightOutput) {
 		try {
-			registerGrindingRecipe.invoke(null,input,leftOutput,rightOutput);
+			registerGrindingRecipe.invoke(null, input, leftOutput, rightOutput);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
@@ -112,7 +113,7 @@ public class ReflectionHacks {
 
 	public static void removeGrindingRecipeByInput(ItemStack input) {
 		try {
-			Map<ItemStack,ItemStack[]> map = (Map<ItemStack, ItemStack[]>) grindingList.get(null);
+			Map<ItemStack, ItemStack[]> map = (Map<ItemStack, ItemStack[]>) grindingList.get(null);
 			Iterator<Map.Entry<ItemStack, ItemStack[]>> iterator = map.entrySet().iterator();
 			while (iterator.hasNext()) {
 				Map.Entry<ItemStack, ItemStack[]> entry = iterator.next();
@@ -127,7 +128,7 @@ public class ReflectionHacks {
 
 	public static void clearAllGrindingRecipes() {
 		try {
-			Map<ItemStack,ItemStack[]> map = (Map<ItemStack, ItemStack[]>) grindingList.get(null);
+			Map<ItemStack, ItemStack[]> map = (Map<ItemStack, ItemStack[]>) grindingList.get(null);
 			map.clear();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -136,34 +137,7 @@ public class ReflectionHacks {
 
 	//=========================================================================================
 
-
-	public static void makeWaterFilterRecipe(ItemStack input, ItemStack leftOutput, ItemStack rightOutput) {
-		try {
-			registerWaterFilterRecipe.invoke(null,input,leftOutput,rightOutput);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static void removeWaterFilterByInput(ItemStack input) {
-		try {
-			Map<ItemStack,ItemStack[]> map = (Map<ItemStack, ItemStack[]>) waterFilterList.get(null);
-			Iterator<Map.Entry<ItemStack, ItemStack[]>> iterator = map.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<ItemStack, ItemStack[]> entry = iterator.next();
-				ItemStack stack = entry.getKey();
-				if (ItemStack.areItemsEqual(input, stack))
-					iterator.remove();
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-
-	//=========================================================================================
-
-	public static void addMarketTrade(MarketData marketData){
+	public static void addMarketTrade(MarketData marketData) {
 		try {
 			List<MarketData> marketDataList = (List<MarketData>) marketList.get(null);
 			marketDataList.add(marketData);
@@ -172,17 +146,34 @@ public class ReflectionHacks {
 		}
 	}
 
-	public static void removeMarketTrade(ItemStack stack){
+	public static void removeMarketTrade(ItemStack stack) {
+		List<MarketData> marketDatas;
 		try {
-			List<MarketData> marketData = (List<MarketData>) marketList.get(null);
-			marketData.removeIf(data -> ItemStack.areItemsEqual(data.getItem(), stack));
+			marketDatas = (List<MarketData>) marketList.get(null);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+
+		marketDatas.removeIf(marketData -> {
+			return ItemStack.areItemsEqual(marketData.getItem(), stack) && ItemStack.areItemStackTagsEqual(marketData.getItem(), stack);
+		});
 	}
 
+	public static void clearAllMarket() {
+		List<MarketData> marketDatas;
+		try {
+			marketDatas = (List<MarketData>) marketList.get(null);
+		}
+		catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 
-	public static void addShippingTrade(ShippingBinData data){
+		marketDatas.clear();
+	}
+
+	//==================================================================================================================
+
+	public static void addShippingTrade(ShippingBinData data) {
 		try {
 			List<ShippingBinData> shippingBinDatas = (List<ShippingBinData>) shippingList.get(null);
 			shippingBinDatas.add(data);
@@ -191,7 +182,7 @@ public class ReflectionHacks {
 		}
 	}
 
-	public static void removeShippingTrade(ItemStack stack){
+	public static void removeShippingTrade(ItemStack stack) {
 		try {
 			List<ShippingBinData> shippingBinDatas = (List<ShippingBinData>) shippingList.get(null);
 			shippingBinDatas.removeIf(data -> ItemStack.areItemsEqual(data.getItem(), stack));
@@ -199,7 +190,6 @@ public class ReflectionHacks {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 
 }

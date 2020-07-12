@@ -16,5 +16,11 @@ public class HarvestCraftTweaker
 
     @EventHandler
     public void post(FMLPostInitializationEvent event) {
+        if (Methods.clearmarket) {
+            ReflectionHacks.clearAllMarket();
+        } else {
+            Methods.marketOutputsToRemove.forEach(ReflectionHacks::removeMarketTrade);
+        }
+        Methods.marketToAdd.forEach(ReflectionHacks::addMarketTrade);
     }
 }
