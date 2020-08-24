@@ -18,7 +18,14 @@ public class Transformer implements IFMLLoadingPlugin {
 		// TODO Hack to bring up Pam's Harvestcraft for some finger-licking-good mixins
 		// Thanks to ClientHax
 		try {
-			loadModJar(new File("./mods/".concat("Pam's HarvestCraft 1.12.2zg.jar")));
+			File mods = new File("./mods");
+			for (File file : mods.listFiles()){
+				if (file.getName().startsWith("Pam's HarvestCraft 1.12.2")) {
+					loadModJar(file);
+					System.out.println("Found Harvestcraft");
+					break;
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
