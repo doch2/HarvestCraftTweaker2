@@ -14,7 +14,7 @@ apply plugin: 'org.spongepowered.mixin'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = '1.3a'
+version = '1.3b'
 group = 'tfar' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "harvestcrafttweaker"
 

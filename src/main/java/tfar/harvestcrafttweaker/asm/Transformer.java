@@ -14,16 +14,32 @@ import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 public class Transformer implements IFMLLoadingPlugin {
+	private File[] modFileList = new File[500];
+	private Integer modFileListNum = 0;
+
 	public Transformer() {
 		// TODO Hack to bring up Pam's Harvestcraft for some finger-licking-good mixins
 		// Thanks to ClientHax
 		try {
-			File mods = new File("./mods");
-			for (File file : mods.listFiles()) {
-				if (file.getName().startsWith("Pam's HarvestCraft 1.12.2") || file.getName().startsWith("Pam's+HarvestCraft+1.12.2") || file.getName().startsWith("Pam's+HarvestCraft-1.12.2")) {
-					loadModJar(file);
-					System.out.println("Found Harvestcraft");
-					break;
+			File defaultModsFolder = new File("./mods");
+			for (File file : defaultModsFolder.listFiles()) {
+				modFileList[modFileListNum] = file;
+				modFileListNum += 1;
+			}
+
+			String heliosLauncherModsFolderPath = System.getenv("APPDATA") + "\\.eternalauncher\\common\\modstore";
+			File heliosLauncherModsFolder = new File(heliosLauncherModsFolderPath);
+			if (heliosLauncherModsFolder.exists()) {
+				getAllFilesInDIrWithFilter(heliosLauncherModsFolderPath, ".jar");
+			}
+
+			for (File file : modFileList) {
+				if (file != null) {
+					if (file.getName().startsWith("Pam's HarvestCraft 1.12.2") || file.getName().startsWith("Pam's+HarvestCraft+1.12.2") || file.getName().startsWith("Pam's+HarvestCraft-1.12.2")) {
+						loadModJar(file);
+						System.out.println("Found Harvestcraft Mod File!");
+						break;
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -31,6 +47,21 @@ public class Transformer implements IFMLLoadingPlugin {
 		}
 		MixinBootstrap.init();
 		Mixins.addConfiguration("mixins.harvestcrafttweaker.json");
+	}
+
+	public void getAllFilesInDIrWithFilter(String dirPath, String fileExtension) {
+		File dir = new File(dirPath);
+		File files[] = dir.listFiles();
+
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (file.isDirectory()) {
+				getAllFilesInDIrWithFilter(file.getPath(), fileExtension);
+			} else if (file.getName().endsWith(fileExtension)) {
+				modFileList[modFileListNum] = file;
+				modFileListNum += 1;
+			}
+		}
 	}
 
 	/**
