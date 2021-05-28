@@ -20,7 +20,7 @@ public class Transformer implements IFMLLoadingPlugin {
 		try {
 			File mods = new File("./mods");
 			for (File file : mods.listFiles()) {
-				if (file.getName().startsWith("Pam's HarvestCraft 1.12.2") || file.getName().startsWith("Pam's+HarvestCraft+1.12.2")) {
+				if (file.getName().startsWith("Pam's HarvestCraft 1.12.2") || file.getName().startsWith("Pam's+HarvestCraft+1.12.2") || file.getName().startsWith("Pam's+HarvestCraft-1.12.2")) {
 					loadModJar(file);
 					System.out.println("Found Harvestcraft");
 					break;
