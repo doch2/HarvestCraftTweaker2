@@ -14,7 +14,7 @@ apply plugin: 'org.spongepowered.mixin'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = '1.2c'
+version = '1.3a'
 group = 'tfar' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "harvestcrafttweaker"
 
@@ -62,7 +62,7 @@ dependencies {
     // at runtime, use the full JEI jar
     //runtime "mezz.jei:jei_${mc_version}:${jei_version}"
     //deobfCompile "curse.maven:pams-harvestcraft:2904825"
-    deobfCompile "harvestcraft:HarvestCraft:${mc_version}:zg"
+    compile files('libs/Pam\'s+HarvestCraft+1.12.2zg.jar')
       
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
